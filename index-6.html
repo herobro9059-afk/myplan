@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0b0f">
+<title>Mening rejam</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Onest:wght@400;500;600&display=swap">
+<style>
+/* Layout: phone-first stack of liquid-glass cards over a slow ember aura; floating glass tab bar at the bottom. */
+:root {
+  --bg: #0b0b0f;
+  --fg: #f5f2ee;
+  --fg2: #a9a6b0;
+  --accent: #ff8f3f;
+  --accent-fg: #ffab6b;
+  --accent-ink: #1c0f05;
+  --ok: #4fd37a;
+  --ok-ink: #06210f;
+  --glass: rgba(255,255,255,.075);
+  --glass-strong: rgba(255,255,255,.13);
+  --edge: rgba(255,255,255,.16);
+  --hi: rgba(255,255,255,.34);
+  --sheen: rgba(255,255,255,.18);
+  --shadow: rgba(0,0,0,.45);
+  --line: rgba(255,255,255,.10);
+  --blob1: rgba(255,122,47,.55);
+  --blob2: rgba(217,54,62,.38);
+  --blob3: rgba(31,143,138,.34);
+  --k-class: #7fb4ff;
+  --k-pray: #5ed3b0;
+  --k-food: #ffc361;
+  --k-train: #ff7a6b;
+  --k-focus: #c3a1ff;
+  --k-rest: #9aa0ad;
+  --font-display: "Bricolage Grotesque", "Onest", system-ui, sans-serif;
+  --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #e8ebf0; --fg: #14161b; --fg2: #5a5f6b;
+    --accent: #f08023; --accent-fg: #b24d06; --accent-ink: #2a1403;
+    --ok: #1f9d4f; --ok-ink: #ffffff;
+    --glass: rgba(255,255,255,.52); --glass-strong: rgba(255,255,255,.78);
+    --edge: rgba(255,255,255,.85); --hi: #ffffff; --sheen: rgba(255,255,255,.7);
+    --shadow: rgba(40,50,70,.22); --line: rgba(20,22,30,.10);
+    --blob1: rgba(255,140,50,.5); --blob2: rgba(235,80,95,.3); --blob3: rgba(40,170,165,.32);
+    --k-class: #2f6fd6; --k-pray: #0f8a68; --k-food: #b9770a; --k-train: #d3412f; --k-focus: #7447d1; --k-rest: #6b7280;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #e8ebf0; --fg: #14161b; --fg2: #5a5f6b;
+  --accent: #f08023; --accent-fg: #b24d06; --accent-ink: #2a1403;
+  --ok: #1f9d4f; --ok-ink: #ffffff;
+  --glass: rgba(255,255,255,.52); --glass-strong: rgba(255,255,255,.78);
+  --edge: rgba(255,255,255,.85); --hi: #ffffff; --sheen: rgba(255,255,255,.7);
+  --shadow: rgba(40,50,70,.22); --line: rgba(20,22,30,.10);
+  --blob1: rgba(255,140,50,.5); --blob2: rgba(235,80,95,.3); --blob3: rgba(40,170,165,.32);
+  --k-class: #2f6fd6; --k-pray: #0f8a68; --k-food: #b9770a; --k-train: #d3412f; --k-focus: #7447d1; --k-rest: #6b7280;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #0b0b0f; --fg: #f5f2ee; --fg2: #a9a6b0;
+  --accent: #ff8f3f; --accent-fg: #ffab6b; --accent-ink: #1c0f05;
+  --ok: #4fd37a; --ok-ink: #06210f;
+  --glass: rgba(255,255,255,.075); --glass-strong: rgba(255,255,255,.13);
+  --edge: rgba(255,255,255,.16); --hi: rgba(255,255,255,.34); --sheen: rgba(255,255,255,.18);
+  --shadow: rgba(0,0,0,.45); --line: rgba(255,255,255,.10);
+  --blob1: rgba(255,122,47,.55); --blob2: rgba(217,54,62,.38); --blob3: rgba(31,143,138,.34);
+  --k-class: #7fb4ff; --k-pray: #5ed3b0; --k-food: #ffc361; --k-train: #ff7a6b; --k-focus: #c3a1ff; --k-rest: #9aa0ad;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.5 var(--font-body);
+  padding-block: 18px 128px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* aura */
+.aura { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.aura i { position: absolute; border-radius: 50%; filter: blur(70px); will-change: transform; }
+.aura i:nth-child(1) { width: 70vmax; height: 70vmax; left: -22vmax; top: -24vmax; background: radial-gradient(circle, var(--blob1), transparent 65%); animation: drift1 38s ease-in-out infinite alternate; }
+.aura i:nth-child(2) { width: 62vmax; height: 62vmax; right: -26vmax; top: 24vh; background: radial-gradient(circle, var(--blob2), transparent 65%); animation: drift2 46s ease-in-out infinite alternate; }
+.aura i:nth-child(3) { width: 56vmax; height: 56vmax; left: -10vmax; bottom: -26vmax; background: radial-gradient(circle, var(--blob3), transparent 65%); animation: drift3 52s ease-in-out infinite alternate; }
+@keyframes drift1 { to { transform: translate(12vmax, 10vmax); } }
+@keyframes drift2 { to { transform: translate(-14vmax, -8vmax); } }
+@keyframes drift3 { to { transform: translate(14vmax, -10vmax); } }
+@media (prefers-reduced-motion: reduce) { .aura i { animation: none; } * { transition: none !important; } }
+
+.wrap { position: relative; z-index: 1; max-width: 560px; margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
+
+/* glass */
+.glass {
+  position: relative;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid var(--edge);
+  border-radius: 26px;
+  box-shadow: inset 0 1px 0 var(--hi), inset 0 -1px 0 var(--line), 0 14px 34px -12px var(--shadow);
+  padding: 18px;
+  min-width: 0;
+}
+.glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(135deg, var(--sheen) 0%, transparent 38%, transparent 70%, var(--sheen) 120%);
+  opacity: .55;
+}
+.glass > * { position: relative; }
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+.display { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; }
+.label { font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--fg2); }
+.muted { color: var(--fg2); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+.hero h1 { font-size: 36px; line-height: 1.02; }
+.hero .date { margin-top: 6px; color: var(--fg2); }
+.hero .save { margin-top: 10px; display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--fg2); }
+.hero .save b { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); display: inline-block; }
+.hero .save.local b { background: var(--k-food); }
+.ring { position: relative; width: 84px; height: 84px; }
+.ring svg { width: 84px; height: 84px; transform: rotate(-90deg); }
+.ring .t { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.ring .t small { font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--fg2); }
+
+/* day chips */
+.chips { display: flex; gap: 6px; }
+.chip {
+  flex: 1; min-width: 0; padding: 9px 0; border-radius: 16px; border: 1px solid var(--edge);
+  background: var(--glass); font-size: 13px; font-weight: 600; text-align: center;
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+}
+.chip.on { background: var(--accent); border-color: transparent; color: var(--accent-ink); box-shadow: inset 0 1px 0 rgba(255,255,255,.45); }
+.chip.today:not(.on) { border-color: var(--accent); color: var(--accent-fg); }
+
+/* schedule */
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.sec-head h2 { font-size: 20px; }
+.rows { display: flex; flex-direction: column; }
+.row { display: grid; grid-template-columns: 54px 10px 1fr; column-gap: 12px; align-items: start; padding: 11px 6px; border-top: 1px solid var(--line); border-radius: 14px; }
+.row:first-child { border-top: 0; }
+.row .tm { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--fg2); padding-top: 1px; }
+.row .dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; background: var(--k, var(--k-rest)); box-shadow: 0 0 0 4px color-mix(in srgb, var(--k, var(--k-rest)) 22%, transparent); }
+.row .ttl { font-weight: 600; }
+.row .sub { font-size: 13px; color: var(--fg2); margin-top: 1px; }
+.row.now { background: var(--glass-strong); border: 1px solid var(--edge); box-shadow: inset 0 1px 0 var(--hi); }
+.row.now .tm { color: var(--accent-fg); }
+.badge { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; letter-spacing: .04em; background: var(--accent); color: var(--accent-ink); vertical-align: 2px; }
+
+/* checklist */
+.check { display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: center; width: 100%; text-align: left; background: none; border: 0; border-top: 1px solid var(--line); padding: 12px 2px; }
+.check:first-of-type { border-top: 0; }
+.box { width: 28px; height: 28px; border-radius: 9px; border: 1.5px solid var(--edge); background: var(--glass); display: grid; place-items: center; box-shadow: inset 0 1px 0 var(--hi); }
+.box svg { width: 16px; height: 16px; opacity: 0; transform: scale(.6); transition: .18s; }
+.check[aria-checked="true"] .box { background: var(--ok); border-color: transparent; color: var(--ok-ink); }
+.check[aria-checked="true"] .box svg { opacity: 1; transform: none; }
+.check[aria-checked="true"] .lbl { color: var(--fg2); }
+.chk-count { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--accent-fg); }
+
+/* buttons */
+.btn { padding: 12px 18px; border-radius: 18px; border: 1px solid var(--edge); background: var(--glass-strong); font-weight: 600; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: inset 0 1px 0 var(--hi); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.btn.warn { border-color: var(--k-train); color: var(--k-train); }
+.btn.sm { padding: 6px 12px; border-radius: 12px; font-size: 13px; }
+.btn.ghost { background: transparent; }
+
+/* tab bar */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; pointer-events: none;
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.tabbar .pill {
+  pointer-events: auto; max-width: 560px; margin-inline: auto; display: flex; gap: 4px; padding: 5px; border-radius: 28px;
+  background: var(--glass); border: 1px solid var(--edge);
+  -webkit-backdrop-filter: blur(28px) saturate(180%); backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--hi), 0 16px 40px -10px var(--shadow);
+}
+.tab { flex: 1; min-width: 0; padding: 11px 4px; border: 0; border-radius: 22px; background: transparent; font-weight: 600; font-size: 14px; color: var(--fg2); transition: .2s; }
+.tab[aria-selected="true"] { background: var(--glass-strong); color: var(--fg); box-shadow: inset 0 1px 0 var(--hi), 0 2px 10px -3px var(--shadow); }
+.tab[aria-selected="true"] span { color: var(--accent-fg); }
+
+/* workouts / food */
+.ex { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+.ex:first-of-type { border-top: 0; }
+.ex .n { font-weight: 600; }
+.ex .r { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent-fg); text-align: right; white-space: nowrap; }
+.ex .d { grid-column: 1 / -1; font-size: 13px; color: var(--fg2); }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.pill-tag { padding: 4px 10px; border-radius: 99px; font-size: 13px; background: var(--glass-strong); border: 1px solid var(--edge); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.stat { padding: 12px 14px; border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--edge); box-shadow: inset 0 1px 0 var(--hi); min-width: 0; }
+.stat .v { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.1; margin-top: 2px; }
+.stat .v small { font-size: 14px; font-weight: 500; color: var(--fg2); margin-left: 3px; }
+.note { font-size: 13px; color: var(--fg2); }
+.meal { padding: 12px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 54px 1fr; gap: 12px; }
+.meal:first-of-type { border-top: 0; }
+.meal .tm { font-weight: 600; color: var(--fg2); font-variant-numeric: tabular-nums; }
+.meal .ttl { font-weight: 600; }
+.meal p { margin: 2px 0 0; font-size: 14px; color: var(--fg2); }
+.bar { height: 12px; border-radius: 99px; background: var(--glass-strong); border: 1px solid var(--edge); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent-fg)); }
+
+/* forms */
+.field { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; }
+.field label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--fg2); flex: 1; min-width: 110px; }
+input[type="number"], input[type="date"], input[type="time"] {
+  padding: 11px 12px; border-radius: 14px; border: 1px solid var(--edge); background: var(--glass-strong); font-size: 16px; text-transform: none; letter-spacing: 0; font-weight: 500; width: 100%; min-width: 0;
+}
+.times { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 10px; }
+.times label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: var(--fg2); }
+.log { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.log:first-child { border-top: 0; }
+.log .kg { font-family: var(--font-display); font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; }
+.up { color: var(--ok); } .down { color: var(--k-train); }
+.chart { width: 100%; height: auto; display: block; }
+.scroll-x { overflow-x: auto; }
+.mile { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); align-items: center; }
+.mile:first-child { border-top: 0; }
+.mile .k { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
+
+/* exercise figures */
+.fig { grid-column: 1 / -1; margin-top: 6px; padding: 10px 12px 8px; border-radius: 16px; background: var(--glass-strong); border: 1px solid var(--line); }
+.fig .in { max-width: 300px; margin-inline: auto; }
+.fig svg { width: 100%; height: auto; display: block; }
+.fig .caps { display: grid; grid-template-columns: 100fr 32fr 100fr; margin-top: 4px; font-size: 12px; font-weight: 600; color: var(--fg2); text-align: center; }
+.fig .caps span:nth-child(2) { grid-column: 3; }
+[hidden] { display: none !important; }
+html,body{margin:0}
+</style>
+</head>
+<body>
+
+<div class="aura" aria-hidden="true"><i></i><i></i><i></i></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+<nav class="tabbar" aria-label="Bo‘limlar">
+  <div class="pill" role="tablist">
+    <button class="tab" role="tab" data-tab="bugun"><span>Bugun</span></button>
+    <button class="tab" role="tab" data-tab="mashq"><span>Mashq</span></button>
+    <button class="tab" role="tab" data-tab="ovqat"><span>Ovqat</span></button>
+    <button class="tab" role="tab" data-tab="vazn"><span>Vazn</span></button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+  var UZ_DAYS = ['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+  var UZ_SHORT = ['Ya','Du','Se','Ch','Pa','Ju','Sh'];
+  var UZ_MON = ['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentyabr','oktyabr','noyabr','dekabr'];
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+  var ymd = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  var fromYmd = function (s) { var p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); };
+  var dayDiff = function (a, b) { return Math.round((fromYmd(b) - fromYmd(a)) / 864e5); };
+  var fmtDate = function (s) { var d = fromYmd(s); return d.getDate() + ' ' + UZ_MON[d.getMonth()]; };
+  var fmtKg = function (n) { return (Math.round(n * 10) / 10).toFixed(1).replace('.', ','); };
+  var toMin = function (t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; };
+
+  var HEIGHT_M = 1.825, GOAL = 70, RATE = 0.3;
+
+  var CHECKS = [
+    { id: 'porn',  t: 'Porno yo‘q' },
+    { id: 'alk',   t: 'Alkogol yo‘q' },
+    { id: 'egg',   t: '1-2 tuxum yedim' },
+    { id: 'water', t: '2-2,5 L suv ichdim' },
+    { id: 'sleep', t: '23:00 da yotdim' },
+    { id: 'steps', t: 'Qadam 6K+ (yo‘l hisobiga)' },
+    { id: 'train', t: 'Mashq / dam kuni bajarildi' },
+    { id: 'cold',  t: 'Sovuq dush' },
+    { id: 'pray',  t: '5 vaqt namoz o‘qidim' },
+    { id: 'study', t: 'Dars qildim: 2,5 soat' }
+  ];
+
+  var defaults = function () {
+    return {
+      v: 1,
+      start: '2026-10-16',
+      walk: 30,
+      auto: true,
+      adj: { fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0 },
+      cache: null,
+      checks: {},
+      weights: [{ d: '2026-10-16', kg: 56 }],
+      prayers: { fajr: '05:30', dhuhr: '12:15', asr: '16:10', maghrib: '17:45', isha: '19:10' }
+    };
+  };
+
+  var S = defaults();
+  var tab = 'bugun';
+  var viewDow = null;
+  var resetArmed = false;
+  var saveMode = 'local'; // 'cloud' | 'local'
+  var dbDoc = null;
+
+  /* ---------- storage ---------- */
+  function merge(loaded) {
+    var d = defaults();
+    if (!loaded || typeof loaded !== 'object') return d;
+    loaded = JSON.parse(JSON.stringify(loaded));
+    var out = Object.assign({}, d, loaded);
+    out.prayers = Object.assign({}, d.prayers, loaded.prayers || {});
+    out.adj = Object.assign({}, d.adj, loaded.adj || {});
+    if (typeof out.auto !== 'boolean') out.auto = true;
+    out.cache = loaded.cache || null;
+    out.checks = loaded.checks || {};
+    out.weights = Array.isArray(loaded.weights) && loaded.weights.length ? loaded.weights : d.weights;
+    return out;
+  }
+  try { var raw = localStorage.getItem('rejam.v1'); if (raw) S = merge(JSON.parse(raw)); } catch (e) {}
+
+  var saveTimer = null, writing = false, again = false;
+  function save() {
+    try { localStorage.setItem('rejam.v1', JSON.stringify(S)); } catch (e) {}
+    if (!dbDoc) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(flush, 500);
+  }
+  function flush() {
+    if (writing) { again = true; return; }
+    writing = true;
+    dbDoc.set(JSON.parse(JSON.stringify(S))).then(function () {
+      writing = false;
+      if (again) { again = false; flush(); }
+    }, function () { writing = false; saveMode = 'local'; paintSave(); });
+  }
+  function paintSave() {
+    var el = document.getElementById('savestate');
+    if (!el) return;
+    el.className = 'save' + (saveMode === 'cloud' ? '' : ' local');
+    el.lastChild.textContent = saveMode === 'cloud' ? 'Hisobingizda saqlanadi' : 'Faqat shu qurilmada saqlanadi';
+  }
+  function connect() {
+    if (!window.claude || !window.claude.use) return;
+    Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+      var db = r[0], user = r[1];
+      if (!db || !user) return null;
+      return user.id().then(function (id) {
+        if (!id) return null;
+        dbDoc = db.doc('data/users/' + id + '/rejam');
+        return dbDoc.get().then(function (snap) {
+          if (snap.exists) { S = merge(snap.data()); try { localStorage.setItem('rejam.v1', JSON.stringify(S)); } catch (e) {} }
+          else { flush(); }
+          saveMode = 'cloud';
+          render();
+        });
+      });
+    }).catch(function () { dbDoc = null; });
+  }
+
+
+  /* ---------- prayer times (Toshkent, hanafiy) ---------- */
+  var PK = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+  var PN = { fajr: 'Bomdod', dhuhr: 'Peshin', asr: 'Asr', maghrib: 'Shom', isha: 'Xufton' };
+  var AL = { fajr: 'Fajr', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' };
+  var prayNote = '';
+  function addMin(t, m) {
+    var x = ((toMin(t) + (m || 0)) % 1440 + 1440) % 1440;
+    return pad(Math.floor(x / 60)) + ':' + pad(x % 60);
+  }
+  function applyBase() {
+    if (!S.cache || !S.cache.t) return;
+    PK.forEach(function (k) { if (S.cache.t[k]) S.prayers[k] = addMin(S.cache.t[k], S.adj[k] || 0); });
+  }
+  function fetchPrayer() {
+    if (!S.auto) { prayNote = 'Qo‘lda kiritilgan vaqtlar'; return; }
+    var now = new Date(), today = ymd(now);
+    if (S.cache && S.cache.d === today) { applyBase(); prayNote = 'Bugungi vaqtlar (Toshkent, hanafiy)'; return; }
+    var url = 'https://api.aladhan.com/v1/timings/' + pad(now.getDate()) + '-' + pad(now.getMonth() + 1) + '-' + now.getFullYear() +
+      '?latitude=41.2995&longitude=69.2401&method=3&school=1&timezonestring=Asia%2FTashkent';
+    prayNote = 'Yangilanmoqda...';
+    fetch(url).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (j) {
+      var tm = j && j.data && j.data.timings, t = {};
+      PK.forEach(function (k) { var m = tm && /(\d{1,2}):(\d{2})/.exec(tm[AL[k]]); if (!m) throw 0; t[k] = pad(+m[1]) + ':' + m[2]; });
+      S.cache = { d: today, t: t };
+      applyBase(); save();
+      prayNote = 'Bugungi vaqtlar (Toshkent, hanafiy)';
+    }).catch(function () {
+      if (S.cache) { applyBase(); prayNote = 'Internet yo‘q. ' + fmtDate(S.cache.d) + ' dagi vaqtlar ishlatilmoqda'; }
+      else prayNote = 'Internet yo‘q. Vaqtlarni qo‘lda kiriting';
+    }).then(function () { if (tab === 'bugun' && !(document.activeElement && document.activeElement.matches('input'))) render(); });
+  }
+
+  /* ---------- schedule ---------- */
+  function schedule(dow) {
+    var P = S.prayers, W = Math.max(5, Math.min(120, +S.walk || 30));
+    var onsite = dow >= 1 && dow <= 4, online = dow === 5, hasClass = onsite || online, sun = dow === 0;
+    var classEnd = online ? 20 * 60 + 50 : 19 * 60 + 50;
+    var trainKind = { 1: 'A', 3: 'B', 6: 'A' }[dow];
+    var fm = function (m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); };
+    var it = [];
+    var add = function (t, ttl, sub, kind) { it.push({ t: t, ttl: ttl, sub: sub || '', kind: kind }); };
+    var inClass = function (t) { return hasClass && toMin(t) >= 17 * 60 && toMin(t) < classEnd; };
+
+    add(P.fajr, 'Bomdod namozi', 'Quyosh chiqishidan oldin', 'pray');
+    add('07:00', 'Turish', 'Sovuq dush', 'rest');
+    add('07:30', 'Nonushta', '1-2 tuxum, non, choy', 'food');
+    if (sun) {
+      add('08:00', 'Takrorlash', '1 soat, yengil', 'focus');
+      add('09:30', 'Yengil yurish', '40 daqiqa', 'rest');
+    } else {
+      add('08:00', 'Dars qilish', '2,5 soat · 10:30 gacha', 'focus');
+      add('10:30', 'Gazak', 'Qatiq yoki sut, yeryong‘oq', 'food');
+      if (trainKind) add('11:00', 'Mashq ' + trainKind, 'Uyda · 40-50 daqiqa', 'train');
+      else if (onsite) add('11:00', 'Ish qidirish', '1 soat', 'focus');
+      else add('11:00', 'Yurish', '30-40 daqiqa, qadam uchun', 'rest');
+    }
+    if (dow === 5) {
+      add(P.dhuhr, 'Juma namozi', 'Masjidda', 'pray');
+      add('13:30', 'Tushlik', 'Osh, makaron yoki sho‘rva + non', 'food');
+    } else {
+      add(P.dhuhr, 'Peshin namozi', '', 'pray');
+      add('12:30', 'Tushlik', 'Osh, makaron yoki sho‘rva + non', 'food');
+    }
+    add(dow === 5 ? '14:30' : '14:00', 'Ish qidirish', sun ? '1 soat' : 'Kamida 3 ta joyga murojaat', 'focus');
+    if (onsite) {
+      add(fm(17 * 60 - W - 30), 'Gazak', 'Non va tuxum yoki qatiq', 'food');
+      add(fm(17 * 60 - W), 'Univerga yo‘lga chiqish', 'Piyoda · ' + W + ' daqiqa', 'class');
+    } else {
+      add('16:15', 'Gazak', 'Non va tuxum yoki qatiq', 'food');
+    }
+    add(P.asr, 'Asr namozi', '', 'pray');
+    if (onsite) add('17:00', 'Universitet', 'Dars binosida · 19:50 gacha', 'class');
+    if (online) add('17:00', 'Universitet', 'Online (Zoom) · 20:50 gacha', 'class');
+    add(P.maghrib, 'Shom namozi', inClass(P.maghrib) ? 'Tanaffusda o‘qing' : '', 'pray');
+    add(P.isha, 'Xufton namozi', inClass(P.isha) ? 'Tanaffusda o‘qing' : '', 'pray');
+    var dinner;
+    if (onsite) {
+      add('19:50', 'Darsdan chiqish', 'Uyga piyoda · ' + W + ' daqiqa', 'class');
+      dinner = fm(classEnd + W + 10);
+    } else if (online) dinner = '21:00';
+    else dinner = '19:00';
+    add(dinner, 'Kechki ovqat', online ? 'Dars tugagach' : 'Dukkakli yoki tuxum, kartoshka yoki guruch', 'food');
+    add(fm(Math.max(21 * 60, toMin(dinner) + 45)), sun ? 'Haftalik reja' : 'Ertangi kunni ko‘rib chiqish', 'Erkin vaqt', 'rest');
+    add('22:30', 'Tun oldi', 'Bir stakan sut yoki qatiq', 'food');
+    add('23:00', 'Uyqu', '', 'rest');
+    it.sort(function (a, b) { return toMin(a.t) - toMin(b.t); });
+    return it;
+  }
+
+  /* ---------- helpers for weights ---------- */
+  function sortedWeights() { return S.weights.slice().sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; }); }
+  function bmi(kg) { return kg / (HEIGHT_M * HEIGHT_M); }
+
+  /* ---------- views ---------- */
+  var CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+
+  function viewToday() {
+    var now = new Date(), today = ymd(now), dow = now.getDay();
+    var vd = viewDow === null ? dow : viewDow;
+    var isToday = vd === dow;
+    var checks = S.checks[today] || {};
+    var done = CHECKS.filter(function (c) { return checks[c.id]; }).length;
+    var dayNo = Math.max(1, dayDiff(S.start, today) + 1);
+    var C = 2 * Math.PI * 34, off = C * (1 - done / CHECKS.length);
+    var nowMin = now.getHours() * 60 + now.getMinutes();
+    var items = schedule(vd);
+    var cur = -1;
+    if (isToday) items.forEach(function (x, i) { if (toMin(x.t) <= nowMin) cur = i; });
+    var train = { 1: 'A', 3: 'B', 6: 'A' }[vd];
+
+    var h = '';
+    h += '<section class="glass hero"><div>' +
+      '<div class="label">Mening rejam</div>' +
+      '<h1 class="display">' + dayNo + '-kun</h1>' +
+      '<div class="date">' + UZ_DAYS[dow] + ', ' + fmtDate(today) + '</div>' +
+      '<div class="save' + (saveMode === 'cloud' ? '' : ' local') + '" id="savestate"><b></b><span>' + (saveMode === 'cloud' ? 'Hisobingizda saqlanadi' : 'Faqat shu qurilmada saqlanadi') + '</span></div>' +
+      '</div><div class="ring"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" fill="none" stroke="var(--line)" stroke-width="9"/>' +
+      '<circle cx="42" cy="42" r="34" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>' +
+      '<div class="t"><span>' + done + '<small>/' + CHECKS.length + '</small></span></div></div></section>';
+
+    h += '<div class="chips" role="group" aria-label="Hafta kuni">';
+    [1, 2, 3, 4, 5, 6, 0].forEach(function (d) {
+      h += '<button class="chip' + (d === vd ? ' on' : '') + (d === dow ? ' today' : '') + '" data-act="day" data-d="' + d + '" aria-pressed="' + (d === vd) + '">' + UZ_SHORT[d] + '</button>';
+    });
+    h += '</div>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">' + UZ_DAYS[vd] + ' tartibi</h2><span class="label">' +
+      (train ? 'Mashq ' + train : vd === 0 ? 'Dam kuni' : 'Mashqsiz kun') + '</span></div><div class="rows">';
+    items.forEach(function (x, i) {
+      h += '<div class="row' + (i === cur ? ' now' : '') + '" style="--k:var(--k-' + x.kind + ')">' +
+        '<div class="tm">' + x.t + '</div><div class="dot"></div><div><div class="ttl">' + x.ttl +
+        (i === cur ? '<span class="badge">HOZIR</span>' : '') + '</div>' + (x.sub ? '<div class="sub">' + x.sub + '</div>' : '') + '</div></div>';
+    });
+    h += '</div></section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Bugungi tekshiruv</h2><span class="chk-count num">' + done + '/' + CHECKS.length + '</span></div><div>';
+    CHECKS.forEach(function (c) {
+      var on = !!checks[c.id];
+      h += '<button class="check" role="checkbox" aria-checked="' + on + '" data-act="chk" data-id="' + c.id + '"><span class="box">' + CHECK_SVG + '</span><span class="lbl">' + c.t + '</span></button>';
+    });
+    h += '</div></section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Namoz vaqtlari</h2>' +
+      '<button class="btn sm' + (S.auto ? ' primary' : '') + '" data-act="pauto" aria-pressed="' + S.auto + '">' + (S.auto ? 'Avtomatik' : 'Qo‘lda') + '</button></div>' +
+      '<p class="note" style="margin:0 0 12px">' + prayNote + '</p><div class="times">';
+    PK.forEach(function (k) {
+      if (S.auto) {
+        h += '<div class="stat"><div class="label">' + PN[k] + '</div><div class="v num" style="font-size:22px">' + S.prayers[k] + '</div>' +
+          '<label for="adj-' + k + '" style="margin-top:6px">Tuzatish, daq<input type="number" id="adj-' + k + '" data-act="padj" data-k="' + k + '" inputmode="numeric" min="-30" max="30" step="1" value="' + (S.adj[k] || 0) + '"></label></div>';
+      } else {
+        h += '<label for="pt-' + k + '">' + PN[k] + '<input type="time" id="pt-' + k + '" data-act="ptime" data-k="' + k + '" value="' + S.prayers[k] + '"></label>';
+      }
+    });
+    h += '</div>' + (S.auto ? '<p class="note" style="margin:10px 0 0">Vaqtlarni o‘zingiz bilgan taqvim bilan solishtiring. Farq bo‘lsa, “Tuzatish” maydoniga daqiqani yozing (masalan 2 yoki -1).</p>' : '') + '</section>';
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Zaxira nusxa</h2></div>' +
+      '<p class="note" style="margin:0 0 12px">Ma‘lumotlar faqat shu brauzerda saqlanadi. Telefon almashtirsangiz yoki brauzer ma‘lumotini tozalasangiz yo‘qoladi. Vaqti-vaqti bilan nusxa oling.</p>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="export">Nusxa olish</button>' +
+      '<label class="btn" for="imp" style="display:inline-block">Tiklash<input type="file" id="imp" accept="application/json,.json" hidden></label></div></section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Univerga yo‘l</h2></div><div class="field">' +
+      '<label for="walk">Piyoda, daqiqa (bir tomonga)<input type="number" id="walk" inputmode="numeric" min="5" max="120" step="5" value="' + (S.walk || 30) + '" data-act="walk"></label></div>' +
+      '<p class="note" style="margin:10px 0 0">Dushanba-payshanba darslar binoda (17:00-19:50), juma online (17:00-20:50). Yo‘l vaqtini o‘zingizga moslang, tartib yangilanadi.</p></section>';
+
+    h += '<div style="display:flex;justify-content:center;padding-top:4px">' +
+      (resetArmed
+        ? '<button class="btn warn" data-act="reset-go">Ha, 1-kundan boshlash</button> <button class="btn ghost" data-act="reset-no" style="margin-left:8px">Bekor</button>'
+        : '<button class="btn" data-act="reset">Hisobni 1-kundan boshlash</button>') + '</div>';
+    return h;
+  }
+
+  /* stick-figure poses: h head, t [neck, pelvis], a arms [elbow, hand] from neck, l legs [knee, foot] from pelvis, x extras */
+  var BAG = function (x, y) { return '<rect x="' + x + '" y="' + y + '" width="10" height="13" rx="2.5" fill="var(--k-food)" stroke="none"/>'; };
+  var STAND = { h: [50, 11], t: [[50, 22], [50, 44]], l: [[[50, 57], [50, 69]]] };
+  var POSES = {
+    pushup: [
+      { h: [91, 31], t: [[80, 34], [46, 50]], a: [[[80, 51], [80, 68]]], l: [[[29, 58], [12, 66]]] },
+      { h: [91, 51], t: [[80, 54], [46, 60]], a: [[[68, 62], [80, 68]]], l: [[[29, 63], [12, 66]]] }
+    ],
+    squatbag: [
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[56, 32], [62, 26]]], l: [[[52, 57], [50, 69]]], x: BAG(61, 16) },
+      { h: [62, 22], t: [[56, 32], [40, 54]], a: [[[62, 40], [66, 34]]], l: [[[62, 52], [54, 69]]], x: BAG(64, 24) }
+    ],
+    dips: [
+      { h: [39, 18], t: [[38, 28], [44, 52]], a: [[[36, 37], [34, 46]]], l: [[[64, 52], [82, 69]]], x: '<path d="M6 46H34M8 46V70M32 46V70" stroke="var(--fg2)" stroke-width="3"/>' },
+      { h: [39, 30], t: [[38, 40], [44, 62]], a: [[[24, 46], [34, 46]]], l: [[[64, 60], [82, 69]]], x: '<path d="M6 46H34M8 46V70M32 46V70" stroke="var(--fg2)" stroke-width="3"/>' }
+    ],
+    bridge: [
+      { h: [10, 63], t: [[20, 64], [50, 64]], a: [[[30, 66], [42, 66]]], l: [[[66, 46], [78, 66]]] },
+      { h: [10, 63], t: [[20, 64], [50, 44]], a: [[[30, 66], [42, 66]]], l: [[[68, 46], [76, 66]]] }
+    ],
+    plank: [
+      { h: [91, 35], t: [[80, 38], [46, 52]], a: [[[80, 66], [96, 66]]], l: [[[29, 59], [12, 66]]] },
+      { h: [91, 35], t: [[80, 38], [46, 62]], a: [[[80, 66], [96, 66]]], l: [[[29, 64], [12, 66]]] }
+    ],
+    pike: [
+      { h: [83, 44], t: [[74, 38], [48, 20]], a: [[[76, 54], [82, 68]]], l: [[[32, 44], [16, 68]]] },
+      { h: [80, 62], t: [[74, 54], [48, 22]], a: [[[64, 62], [84, 68]]], l: [[[32, 44], [16, 68]]] }
+    ],
+    lunge: [
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[44, 33], [48, 43]]], l: [[[50, 57], [50, 69]], [[56, 57], [56, 69]]] },
+      { h: [48, 17], t: [[48, 28], [48, 50]], a: [[[42, 39], [47, 49]]], l: [[[66, 52], [66, 69]], [[38, 66], [24, 69]]] }
+    ],
+    row: [
+      { h: [73, 26], t: [[62, 28], [36, 40]], a: [[[63, 42], [63, 54]]], l: [[[38, 54], [36, 69]]], x: BAG(58, 54) },
+      { h: [73, 26], t: [[62, 28], [36, 40]], a: [[[50, 36], [58, 44]]], l: [[[38, 54], [36, 69]]], x: BAG(53, 44) }
+    ],
+    calf: [
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[64, 26], [77, 28]]], l: [[[50, 57], [50, 66]]], x: '<path d="M78 4V70" stroke="var(--fg2)" stroke-width="3"/><path d="M48 68H60" stroke="var(--fg)" stroke-width="5"/>' },
+      { h: [50, 5], t: [[50, 16], [50, 38]], a: [[[64, 20], [77, 22]]], l: [[[50, 51], [50, 61]]], x: '<path d="M78 4V70" stroke="var(--fg2)" stroke-width="3"/><path d="M49 62L60 68" stroke="var(--fg)" stroke-width="5"/>' }
+    ],
+    legraise: [
+      { h: [10, 63], t: [[20, 64], [50, 64]], a: [[[30, 66], [42, 66]]], l: [[[70, 62], [90, 58]]] },
+      { h: [10, 63], t: [[20, 64], [50, 64]], a: [[[30, 66], [42, 66]]], l: [[[50, 42], [50, 22]]] }
+    ],
+    shoulder: [
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[58, 16], [66, 12]]], l: STAND.l },
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[42, 30], [36, 40]]], l: STAND.l }
+    ],
+    jack: [
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[43, 32], [42, 42]], [[57, 32], [58, 42]]], l: [[[48, 57], [47, 69]], [[52, 57], [53, 69]]] },
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[34, 18], [28, 8]], [[66, 18], [72, 8]]], l: [[[38, 57], [28, 69]], [[62, 57], [72, 69]]] }
+    ],
+    airsquat: [
+      { h: [50, 11], t: [[50, 22], [50, 44]], a: [[[44, 33], [46, 43]]], l: STAND.l },
+      { h: [62, 22], t: [[56, 32], [40, 54]], a: [[[66, 34], [78, 34]]], l: [[[62, 52], [54, 69]]] }
+    ]
+  };
+  var poly = function (pts) { return '<polyline points="' + pts.map(function (q) { return q.join(','); }).join(' ') + '"/>'; };
+  function pose(p) {
+    var n = p.t[0], pv = p.t[1];
+    return '<path d="M0 70.5H100" stroke="var(--line)" stroke-width="2" fill="none"/>' +
+      (p.x || '') +
+      '<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">' +
+      '<g stroke="var(--fg)">' + poly([n, pv]) + (p.l || []).map(function (L) { return poly([pv, L[0], L[1]]); }).join('') + '</g>' +
+      '<g stroke="var(--accent)">' + (p.a || []).map(function (A) { return poly([n, A[0], A[1]]); }).join('') + '</g>' +
+      '<circle cx="' + p.h[0] + '" cy="' + p.h[1] + '" r="7" stroke="var(--fg)" stroke-width="4.5"/></g>';
+  }
+  function fig(key, caps) {
+    var P = POSES[key];
+    if (!P) return '';
+    return '<div class="fig"><div class="in"><svg viewBox="0 0 232 80" role="img" aria-label="' + caps[0] + ' va ' + caps[1] + ' holati">' +
+      '<g>' + pose(P[0]) + '</g>' +
+      '<path d="M104 40h18m-6-6l6 6-6 6" fill="none" stroke="var(--fg2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<g transform="translate(132,0)">' + pose(P[1]) + '</g></svg>' +
+      '<div class="caps"><span>' + caps[0] + '</span><span>' + caps[1] + '</span></div></div></div>';
+  }
+
+  var EX_A = [
+    ['Push-up', '3 × 6-12', 'Qiyin bo‘lsa tizzadan. Tanangiz boshdan oyoqqacha tekis bo‘lsin, ko‘krak yerga yaqinlashguncha tushing.', 'pushup', ['Yuqorida', 'Pastda']],
+    ['Ryukzak bilan squat', '3 × 12-15', 'Ryukzakka kitoblar soling va ko‘kragingizga qisib turing. Dumbani orqaga tortib o‘tiring, tovon yerdan uzilmasin.', 'squatbag', ['Tik', 'Pastda']],
+    ['Stul orqasida dips', '3 × 8-12', 'Faqat mustahkam, sirpanmaydigan stul. Tirsaklar orqaga qarab bukilsin, yelkalar quloqqa ko‘tarilmasin.', 'dips', ['Yuqorida', 'Pastda']],
+    ['Dumba ko‘prigi', '3 × 15', 'Tovonlar bilan itarib, dumbani ko‘taring. Tepada 1 soniya ushlang.', 'bridge', ['Pastda', 'Tepada']],
+    ['Plank', '3 × 20-40 s', 'Tirsaklar yelka ostida. Belingiz pastga cho‘kmasin, tana to‘g‘ri chiziq bo‘lsin.', 'plank', ['To‘g‘ri', 'Noto‘g‘ri']]
+  ];
+  var EX_B = [
+    ['Pike push-up', '3 × 6-10', 'Dumbani yuqoriga ko‘tarib, boshni qo‘llar orasiga tushiring. Yelkalar ishlaydi.', 'pike', ['Yuqorida', 'Pastda']],
+    ['Orqaga lunge', '3 × 8 har oyoqqa', 'Bir oyoq bilan orqaga qadam tashlang. Old tizza oyoq barmoqlaridan oshmasin, gavda tik.', 'lunge', ['Tik turing', 'Orqaga qadam']],
+    ['Ryukzak bilan tortish', '3 × 10-12', 'Oldinga engashib, ryukzakni qoringa torting. Tirsakni orqaga yo‘naltiring, bel tekis.', 'row', ['Pastda', 'Tortilgan']],
+    ['Boldir ko‘tarish', '3 × 15-20', 'Devordan ushlab turing. Panjaga ko‘tariling, tepada ushlang, sekin tushing.', 'calf', ['Tovonda', 'Panjada']],
+    ['Oyoq ko‘tarish', '3 × 10-12', 'Yerda yotib, oyoqlarni sekin ko‘taring. Belingiz yerdan uzilmasin.', 'legraise', ['Past', 'Tepada']]
+  ];
+  function exList(arr) {
+    return arr.map(function (e) {
+      return '<div class="ex"><div class="n">' + e[0] + '</div><div class="r">' + e[1] + '</div><div class="d">' + e[2] + '</div>' + (e[3] ? fig(e[3], e[4]) : '') + '</div>';
+    }).join('');
+  }
+
+  function viewMashq() {
+    var dow = new Date().getDay();
+    var td = { 1: 'A', 3: 'B', 6: 'A' }[dow];
+    var h = '';
+    h += '<section class="glass"><div class="label">Haftasiga 3 kun · uyda</div><h1 class="display" style="font-size:32px;margin-top:6px">Mushak massasi uchun mashq</h1>' +
+      '<div class="pills"><span class="pill-tag">Dushanba · A</span><span class="pill-tag">Chorshanba · B</span><span class="pill-tag">Shanba · A</span></div>' +
+      '<p class="note" style="margin:12px 0 0">' + (td ? 'Bugun: ' + td + ' mashq.' : 'Bugun dam kuni. Mushaklar aynan dam olganda o‘sadi.') + '</p></section>';
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Isinish</h2><span class="label">5 daqiqa</span></div>' + exList([
+      ['Yelka aylanmalari', '30 s', 'Qo‘lni sekin va katta doirada aylantiring.', 'shoulder', ['Oldinga', 'Orqaga']],
+      ['Sakrab yoyilish', '20 ta', 'Yengil sakrang, qo‘l va oyoqlarni birga oching.', 'jack', ['Boshlash', 'Sakrash']],
+      ['Havo squat', '10 ta', 'Qo‘llar oldinga, tovon yerdan uzilmasin.', 'airsquat', ['Tik', 'Pastda']]
+    ]) + '</section>';
+    h += '<section class="glass"' + (td === 'A' ? ' style="border-color:var(--accent)"' : '') + '><div class="sec-head"><h2 class="display">A mashq</h2><span class="label">Dush · Shan' + (td === 'A' ? ' · bugun' : '') + '</span></div>' + exList(EX_A) + '</section>';
+    h += '<section class="glass"' + (td === 'B' ? ' style="border-color:var(--accent)"' : '') + '><div class="sec-head"><h2 class="display">B mashq</h2><span class="label">Chor' + (td === 'B' ? ' · bugun' : '') + '</span></div>' + exList(EX_B) + '</section>';
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Qoidalar</h2></div>' +
+      '<div class="ex"><div class="n">Dam oralig‘i</div><div class="r">60-90 s</div><div class="d">Setlar orasida.</div></div>' +
+      '<div class="ex"><div class="n">Oshirib borish</div><div class="r">haftada +1-2</div><div class="d">Takrorni oshiring. Hamma setda yuqori chegaraga yetsangiz, ryukzakka kitob qo‘shing.</div></div>' +
+      '<div class="ex"><div class="n">Mashqdan keyin</div><div class="r">1 soat ichida</div><div class="d">Tuxum, non yoki tushlik. Mashq ovqatsiz foyda bermaydi.</div></div>' +
+      '<p class="note" style="margin:10px 0 0">Og‘riq sezsangiz mashqni to‘xtating. Bu umumiy tavsiya, sog‘lig‘ingizda muammo bo‘lsa shifokorga ko‘rining.</p></section>';
+    return h;
+  }
+
+  function viewOvqat() {
+    var meals = [
+      ['07:30', 'Nonushta', '1-2 tuxum, non, choy. Bo‘lsa guruch yoki suli bo‘tqasi, ustiga yog‘.'],
+      ['10:30', 'Gazak', 'Bir idish qatiq yoki sut. Bir hovuch yeryong‘oq yoki non va sariyog‘.'],
+      ['12:30', 'Tushlik', 'Osh, makaron, kartoshka yoki sho‘rva, yoniga non. Loviya, no‘xat va yasmiq arzon oqsil beradi.'],
+      ['16:15', 'Gazak', 'Non va tuxum yoki qatiq. Dars boshlanishidan oldin to‘q bo‘ling.'],
+      ['20:00', 'Kechki ovqat', 'Tushlikdagi kabi. Kartoshka yoki guruch hisobiga ko‘proq oling.'],
+      ['22:00', 'Tun oldi', 'Bir stakan sut yoki qatiq, bir bo‘lak non.']
+    ];
+    var h = '';
+    h += '<section class="glass"><div class="label">Vaznni oshirish</div><h1 class="display" style="font-size:32px;margin:6px 0 14px">Arzon va to‘yimli ovqat</h1><div class="stats">' +
+      '<div class="stat"><div class="label">Ortiqcha</div><div class="v">300-400<small>kkal/kun</small></div></div>' +
+      '<div class="stat"><div class="label">Oqsil</div><div class="v">90-110<small>g/kun</small></div></div>' +
+      '<div class="stat"><div class="label">Suv</div><div class="v">2-2,5<small>L/kun</small></div></div></div>' +
+      '<p class="note" style="margin:12px 0 0">Raqamlar taxminiy: haftasiga 300 g qo‘shish uchun. Kuniga 5-6 marta ovqatlaning, orada 4 soatdan ko‘p tanaffus qilmang.</p></section>';
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Kun davomida</h2></div>' +
+      meals.map(function (m) { return '<div class="meal"><div class="tm">' + m[0] + '</div><div><div class="ttl">' + m[1] + '</div><p>' + m[2] + '</p></div></div>'; }).join('') + '</section>';
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Eng arzon manbalar</h2></div>' +
+      '<div class="label" style="margin-top:4px">Kaloriya</div><div class="pills">' + ['Non', 'Guruch', 'Kartoshka', 'Makaron', 'O‘simlik yog‘i', 'Un mahsulotlari'].map(function (x) { return '<span class="pill-tag">' + x + '</span>'; }).join('') + '</div>' +
+      '<div class="label" style="margin-top:14px">Oqsil</div><div class="pills">' + ['Tuxum', 'Loviya', 'No‘xat', 'Yasmiq', 'Qatiq', 'Suzma', 'Yeryong‘oq'].map(function (x) { return '<span class="pill-tag">' + x + '</span>'; }).join('') + '</div></section>';
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Ish topguncha</h2></div>' +
+      '<div class="ex"><div class="n">Oila bilan kelishing</div><div class="d">Har kuni tuxum va non bo‘lishini ayting. Ikkinchi marta olishdan uyalmang.</div></div>' +
+      '<div class="ex"><div class="n">Yog‘ qo‘shing</div><div class="d">Osh va bo‘tqaga bir qoshiq yog‘ qo‘shsangiz, kaloriya sezilarli oshadi.</div></div>' +
+      '<div class="ex"><div class="n">Suvni ovqat orasida iching</div><div class="d">Ovqatdan oldin ko‘p suv ichsangiz, tez to‘yib qolasiz.</div></div>' +
+      '<div class="ex"><div class="n">Hafta oxirida tarozi</div><div class="d">300 g dan kam qo‘shilgan bo‘lsa, kuniga bitta qo‘shimcha gazak qo‘shing. Ikki hafta o‘zgarmasa ham shunday qiling.</div></div>' +
+      '<p class="note" style="margin:10px 0 0">Bu umumiy tavsiya. Sog‘lig‘ingizda muammo bo‘lsa shifokorga ko‘rining.</p></section>';
+    return h;
+  }
+
+  function chartSvg(w0d, w0kg) {
+    var W = Math.ceil((GOAL - w0kg) / RATE) + 1;
+    var X0 = 36, X1 = 328, Y0 = 14, Y1 = 158, ymin = Math.floor(w0kg) - 1, ymax = GOAL + 1;
+    var sx = function (wk) { return X0 + (X1 - X0) * (wk / W); };
+    var sy = function (kg) { return Y1 - (Y1 - Y0) * ((kg - ymin) / (ymax - ymin)); };
+    var s = '<svg class="chart" viewBox="0 0 340 190" role="img" aria-label="Rejadagi va haqiqiy vazn grafigi">';
+    var ticks = [Math.floor(w0kg), 60, 65, 70].filter(function (v, i, a) { return a.indexOf(v) === i && v >= ymin && v <= ymax; });
+    ticks.forEach(function (v) {
+      s += '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + sy(v).toFixed(1) + '" y2="' + sy(v).toFixed(1) + '" stroke="var(--line)"/>' +
+        '<text x="' + (X0 - 6) + '" y="' + (sy(v) + 4).toFixed(1) + '" text-anchor="end" font-size="11" fill="var(--fg2)">' + v + '</text>';
+    });
+    [0, 12, 24, 36, 48].filter(function (v) { return v <= W; }).forEach(function (wk) {
+      s += '<text x="' + sx(wk).toFixed(1) + '" y="178" text-anchor="middle" font-size="11" fill="var(--fg2)">' + wk + '</text>';
+    });
+    s += '<text x="' + X1 + '" y="188" text-anchor="end" font-size="10" fill="var(--fg2)">hafta</text>';
+    s += '<line x1="' + sx(0).toFixed(1) + '" y1="' + sy(w0kg).toFixed(1) + '" x2="' + sx((GOAL - w0kg) / RATE).toFixed(1) + '" y2="' + sy(GOAL).toFixed(1) + '" stroke="var(--fg2)" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round"/>';
+    var pts = sortedWeights().map(function (w) { return [sx(dayDiff(w0d, w.d) / 7), sy(w.kg)]; });
+    if (pts.length > 1) s += '<polyline fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') + '"/>';
+    pts.forEach(function (p) { s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="4.5" fill="var(--accent)" stroke="var(--bg)" stroke-width="2"/>'; });
+    return s + '</svg>';
+  }
+
+  function viewVazn() {
+    var ws = sortedWeights(), first = ws[0], last = ws[ws.length - 1];
+    var today = ymd(new Date());
+    var weeksLeft = Math.max(0, Math.ceil((GOAL - last.kg) / RATE));
+    var prog = Math.max(0, Math.min(1, (last.kg - first.kg) / (GOAL - first.kg)));
+    var planNow = Math.min(GOAL, first.kg + RATE * (dayDiff(first.d, last.d) / 7));
+    var diffPlan = last.kg - planNow;
+    var b = bmi(last.kg);
+    var h = '';
+    h += '<section class="glass"><div class="label">Maqsad ' + GOAL + ' kg · haftasiga ' + RATE.toString().replace('.', ',') + ' kg</div>' +
+      '<h1 class="display" style="font-size:44px;margin:6px 0 12px">' + fmtKg(last.kg) + '<small style="font-size:20px;color:var(--fg2);font-weight:500"> kg</small></h1>' +
+      '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.round(prog * 100) + '"><i style="width:' + (prog * 100).toFixed(1) + '%"></i></div>' +
+      '<div style="display:flex;justify-content:space-between;margin-top:6px" class="note num"><span>' + fmtKg(first.kg) + '</span><span>' + Math.round(prog * 100) + '%</span><span>' + GOAL + '</span></div>' +
+      '<div class="stats" style="margin-top:14px">' +
+      '<div class="stat"><div class="label">BMI</div><div class="v num">' + fmtKg(b) + '</div></div>' +
+      '<div class="stat"><div class="label">Reja bilan</div><div class="v num ' + (diffPlan >= 0 ? 'up' : 'down') + '">' + (diffPlan >= 0 ? '+' : '−') + fmtKg(Math.abs(diffPlan)) + '<small>kg</small></div></div>' +
+      '<div class="stat"><div class="label">Qoldi</div><div class="v num">~' + weeksLeft + '<small>hafta</small></div></div></div>' +
+      '<p class="note" style="margin:12px 0 0">Bo‘y 182,5 sm. 17 yosh uchun BMI me‘yori 17,1-24,3, ya‘ni 56,9-81,1 kg. Haftada bir marta, bir xil kuni, ertalab ovqatdan oldin tortiling.</p></section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Yangi o‘lchov</h2></div><div class="field">' +
+      '<label for="w-kg">Vazn, kg<input type="number" id="w-kg" inputmode="decimal" step="0.1" min="30" max="150" value="' + last.kg + '"></label>' +
+      '<label for="w-d">Sana<input type="date" id="w-d" value="' + today + '"></label>' +
+      '<button class="btn primary" data-act="wsave">Saqlash</button></div></section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Reja va haqiqat</h2><span class="label">kg / hafta</span></div><div class="scroll-x">' + chartSvg(first.d, first.kg) + '</div>' +
+      '<div class="note" style="display:flex;gap:16px;margin-top:6px"><span><b style="color:var(--accent-fg)">●</b> Haqiqiy</span><span><b>- -</b> Reja</span></div></section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Bosqichlar</h2></div>';
+    [58, 60, 65, 70].filter(function (kg) { return kg > first.kg; }).forEach(function (kg) {
+      var wk = (kg - first.kg) / RATE;
+      var d = fromYmd(first.d); d.setDate(d.getDate() + Math.round(wk * 7));
+      var reached = last.kg >= kg;
+      h += '<div class="mile"><span class="k num">' + kg + ' kg</span><span class="note">' + Math.round(wk) + '-haftada · ' + d.getDate() + ' ' + UZ_MON[d.getMonth()] + ' ' + d.getFullYear() + '</span><span class="' + (reached ? 'up' : 'muted') + '" style="font-weight:600">' + (reached ? 'Bajarildi' : 'Kutilmoqda') + '</span></div>';
+    });
+    h += '</section>';
+
+    h += '<section class="glass"><div class="sec-head"><h2 class="display">Yozuvlar</h2></div>';
+    ws.slice().reverse().forEach(function (w, i, arr) {
+      var prev = arr[i + 1];
+      var dl = prev ? w.kg - prev.kg : null;
+      h += '<div class="log"><div><div class="kg">' + fmtKg(w.kg) + ' kg</div><div class="note">' + fmtDate(w.d) + '</div></div>' +
+        '<div class="num ' + (dl === null ? 'muted' : dl >= 0 ? 'up' : 'down') + '" style="font-weight:600">' + (dl === null ? 'Boshlanish' : (dl >= 0 ? '+' : '−') + fmtKg(Math.abs(dl))) + '</div>' +
+        (ws.length > 1 ? '<button class="btn sm ghost" data-act="wdel" data-d="' + w.d + '" aria-label="O‘chirish">O‘chirish</button>' : '<span></span>') + '</div>';
+    });
+    return h + '</section>';
+  }
+
+  /* ---------- render ---------- */
+  var app = document.getElementById('app');
+  function render() {
+    var y = window.scrollY;
+    app.innerHTML = tab === 'mashq' ? viewMashq() : tab === 'ovqat' ? viewOvqat() : tab === 'vazn' ? viewVazn() : viewToday();
+    document.querySelectorAll('.tab').forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.tab === tab)); });
+    window.scrollTo(0, y);
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-tab],[data-act]');
+    if (!t) return;
+    if (t.dataset.tab) { tab = t.dataset.tab; resetArmed = false; render(); window.scrollTo(0, 0); try { history.replaceState(null, '', '#' + tab); } catch (x) {} return; }
+    var a = t.dataset.act;
+    if (a === 'day') { viewDow = +t.dataset.d; render(); }
+    else if (a === 'chk') {
+      var today = ymd(new Date()); S.checks[today] = S.checks[today] || {};
+      S.checks[today][t.dataset.id] = !S.checks[today][t.dataset.id];
+      save(); render();
+    }
+    else if (a === 'pauto') { S.auto = !S.auto; save(); if (S.auto) { prayNote = ''; fetchPrayer(); } else prayNote = 'Qo‘lda kiritilgan vaqtlar'; render(); }
+    else if (a === 'export') {
+      try {
+        var blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' });
+        var ln = document.createElement('a'); ln.href = URL.createObjectURL(blob); ln.download = 'rejam-' + ymd(new Date()) + '.json';
+        document.body.appendChild(ln); ln.click(); ln.remove();
+      } catch (x) {}
+    }
+    else if (a === 'reset') { resetArmed = true; render(); }
+    else if (a === 'reset-no') { resetArmed = false; render(); }
+    else if (a === 'reset-go') { S.start = ymd(new Date()); S.checks = {}; resetArmed = false; save(); render(); window.scrollTo(0, 0); }
+    else if (a === 'wsave') {
+      var kg = parseFloat(String(document.getElementById('w-kg').value).replace(',', '.'));
+      var d = document.getElementById('w-d').value;
+      if (!(kg >= 30 && kg <= 150) || !d) return;
+      S.weights = S.weights.filter(function (w) { return w.d !== d; });
+      S.weights.push({ d: d, kg: Math.round(kg * 10) / 10 });
+      save(); render();
+    }
+    else if (a === 'wdel') {
+      if (S.weights.length > 1) { S.weights = S.weights.filter(function (w) { return w.d !== t.dataset.d; }); save(); render(); }
+    }
+  });
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.dataset && t.dataset.act === 'walk') { var wv = parseInt(t.value, 10); if (wv >= 5 && wv <= 120) { S.walk = wv; save(); render(); } return; }
+    if (t.id === 'imp' && t.files && t.files[0]) {
+      var fr = new FileReader();
+      fr.onload = function () { try { S = merge(JSON.parse(String(fr.result))); applyBase(); save(); render(); } catch (x) {} };
+      fr.readAsText(t.files[0]); return;
+    }
+    if (t.dataset && t.dataset.act === 'padj') { var av = parseInt(t.value, 10); if (isNaN(av)) av = 0; S.adj[t.dataset.k] = Math.max(-30, Math.min(30, av)); applyBase(); save(); render(); return; }
+    if (t.dataset && t.dataset.act === 'ptime' && /^\d{2}:\d{2}$/.test(t.value)) { S.prayers[t.dataset.k] = t.value; save(); render(); }
+  });
+
+  var h0 = (location.hash || '').slice(1);
+  if (['bugun', 'mashq', 'ovqat', 'vazn'].indexOf(h0) >= 0) tab = h0;
+  fetchPrayer();
+  render();
+  connect();
+  setInterval(function () { if (tab === 'bugun' && !document.hidden && !document.activeElement.matches('input')) render(); }, 60000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) { fetchPrayer(); if (tab === 'bugun') render(); } });
+})();
+</script>
+</body>
+</html>
